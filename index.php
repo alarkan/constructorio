@@ -1,7 +1,8 @@
-
-
-
-
+<?php 
+ob_start();
+session_start(); 
+include_once'include/conexion.php';
+?>
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -420,8 +421,40 @@
 		</a>
 	</div>
 </div>
-
-<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
+<?php  if (isset($_SESSION['message1'])) { ?>
+	<?= $_SESSION['message1']?>
+	<?php session_unset();} ?>
+	<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 </body>
 </html>
+
+<?php
+if ($_POST) {
+	$cedula = $_POST['cedula'];
+	$nombres = $_POST['nombres'];
+	$apellidos = $_POST['apellidos'];
+	$correo = $_POST['correo'];
+	$telefono = $_POST['telefono'];
+	$ocupacion = $_POST['ocupacion'];
+	$ciudad = $_POST['ciudad'];
+	$especialidad = $_POST['especialidad'];
+
+	$sentencia = $mysqli->prepare("SELECT * FROM maestro WHERE cedula=?");
+	$sentencia->bind_param("i", $cedula);
+	$sentencia->execute();  
+	$resultado = $sentencia->get_result();
+	$fila = $resultado->fetch_assoc();
+	if ($fila) {
+		$_SESSION['message1']= "<script type='text/javascript'>alert('¡Error!.El Maestro con identificacion ".$cedula." ya existe verifique el valor ingresado');</script>";
+		header("location:index.php");
+	}else{
+		$sql_insertar = $mysqli->prepare("INSERT INTO maestro(cedula,nombres,apellidos,correo,telefono, ocupacion,ciudad,especialidad) VALUES (?,?,?,?,?,?,?,?)");
+		$sql_insertar->bind_param("ssssssss",$cedula,$nombres,$apellidos,$correo,$telefono,$ocupacion,$ciudad,$especialidad);
+		$sql_insertar->execute(); 
+		$_SESSION['message1']= "<script type='text/javascript'>alert('Registro Exitoso');</script>";
+		header("location:index.php");
+	}
+} 
+ob_end_flush();
+?>
