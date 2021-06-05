@@ -58,116 +58,121 @@ include_once'include/conexion.php';
 					</form>
 				</section>
 			</section>
-		<?php endif ?>
-		<?php 
-		if($_POST):
-			$ciudad = $_POST['ciudad'];
-			$categoria = $_SESSION['categoria'];
-			var_dump($_SESSION['categoria']);
-			var_dump($ciudad);
-			$sentencia = $mysqli->prepare("SELECT * FROM maestro WHERE ciudad=? AND ocupacion=?");
-			$sentencia->bind_param("ss", $ciudad,$categoria);
-			$sentencia->execute();  
-			$resultado = $sentencia->get_result();
-			$fila = $resultado->fetch_assoc();
-			?>
-			<section class="container-fluid px-5">
-				<section class="row justify-content-center" id="cabecera">
-					<div class="col-md-6 text-center mb-1 mt-0s">
-						<a href="index.php"><img src="img/logo-constructorio.png" class="img-fluid px-5"></a>
-						<p class="h4 text-white mt-3">¡AQUÍ LO ENCUENTRAS TODO!</p>
-					</div>
-				</section>
-				<section class="row pt-5 justify-content-center" id="contenido">
-					<div class="col-md-6 px-3">
-						<div class="row pl-3">
-							<div class="col-md-4">
-								<img src="img/profile-default.png" class="img-fluid" style="border-radius: 25px 0 25px 0">
+			<?php  if (isset($_SESSION['message2'])) { ?>
+				<?= $_SESSION['message2']?>
+				<?php $_SESSION['message2'] = "";} ?>
+			<?php endif ?>
+			<?php 
+			if($_POST):
+				$ciudad = $_POST['ciudad'];
+				$categoria = $_SESSION['categoria'];
+				$sentencia = $mysqli->prepare("SELECT * FROM maestro WHERE ciudad=? AND ocupacion=?");
+				$sentencia->bind_param("ss", $ciudad,$categoria);
+				$sentencia->execute();  
+				$resultado = $sentencia->get_result();
+				$fila = $resultado->fetch_assoc();
+				if(!$fila){
+					$_SESSION['message2']= "<script type='text/javascript'>alert('¡MUY PRONTO INFORMACIÓN! BUSCA EN OTRA CIUDAD');</script>";
+					header("location:perfil.php?category=".$categoria);
+				}
+				?>
+				<section class="container-fluid px-5">
+					<section class="row justify-content-center" id="cabecera">
+						<div class="col-md-6 text-center mb-1 mt-0s">
+							<a href="index.php"><img src="img/logo-constructorio.png" class="img-fluid px-5"></a>
+							<p class="h4 text-white mt-3">¡AQUÍ LO ENCUENTRAS TODO!</p>
+						</div>
+					</section>
+					<section class="row pt-5 justify-content-center" id="contenido">
+						<div class="col-md-6 px-3">
+							<div class="row pl-3">
+								<div class="col-md-4">
+									<img src="img/profile-default.png" class="img-fluid" style="border-radius: 25px 0 25px 0">
+								</div>
+								<div class="col-md-8">
+									<div id="stars">
+										<span class="fa fa-star checked"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span>
+										<span class="fa fa-star"></span><br>
+										<span class="text-gold">100 estrellas</span>
+									</div>
+									<h1 class="text-white py-2"><?php echo $fila['nombres']." ".$fila['apellidos'] ?></h1>
+									<p class="text-white py-1"><?php echo $fila['especialidad']?></p>
+									<ul class="text-white">
+										<li class="text-muted">Email: <strong class="text-white"><?php echo $fila['correo']?></strong></li>
+										<li class="text-muted">Profesión: <strong class="text-white"><?php echo $fila['ocupacion']?></strong></li>
+										<li class="text-muted">Ciudad: <strong class="text-white"><?php echo $fila['ciudad']?></strong></li>
+									</ul>
+									<a href="https://wa.me/57<?php echo $fila['telefono']?>" class="btn btn-outline-success">Contactar &nbsp; <i class="fab fa-whatsapp"></i></a>
+								</div>
 							</div>
-							<div class="col-md-8">
+							<div class="row pl-3">
+								<div class="col-md-12">
+									<div class="row">
+										<div class="col-md-12 mb-3 text-center pt-3">
+											<span class="text-white h3">Conoce mi trabajo</span>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</section>
+					<section class="row my-5 justify-content-center" id="similares">
+						<div class="col-sm-4 col-md-2 card rounded p-0 text-center mx-2 mt-3">
+							<picture style="background-image: url('img/profile-default.png'); background-size: cover; height: 12em;'"></picture>
+							<div class="p-2">
 								<div id="stars">
 									<span class="fa fa-star checked"></span>
 									<span class="fa fa-star"></span>
 									<span class="fa fa-star"></span>
 									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span><br>
-									<span class="text-gold">100 estrellas</span>
+									<span class="fa fa-star"></span>
+									<br><span class="text-gold">100 estrellas</span>
 								</div>
-								<h1 class="text-white py-2"><?php echo $fila['nombres']." ".$fila['apellidos'] ?></h1>
-								<p class="text-white py-1"><?php echo $fila['especialidad']?></p>
-								<ul class="text-white">
-									<li class="text-muted">Email: <strong class="text-white"><?php echo $fila['correo']?></strong></li>
-									<li class="text-muted">Profesión: <strong class="text-white"><?php echo $fila['ocupacion']?></strong></li>
-									<li class="text-muted">Ciudad: <strong class="text-white"><?php echo $fila['ciudad']?></strong></li>
-								</ul>
-								<a href="https://wa.me/57<?php echo $fila['telefono']?>" class="btn btn-outline-success">Contactar &nbsp; <i class="fab fa-whatsapp"></i></a>
+								<a>
+									<strong class="text-primary">Nombre Cliente</strong><br>
+								</a>
+								<span>Correo Cliente</span><br>
+								<span>Telefono Cliente</span>
+								<a :href="https://wa.me/57" class="btn btn-outline-success"><i class="fab fa-whatsapp"></i></a>
 							</div>
 						</div>
-						<div class="row pl-3">
-							<div class="col-md-12">
-								<div class="row">
-									<div class="col-md-12 mb-3 text-center pt-3">
-										<span class="text-white h3">Conoce mi trabajo</span>
-									</div>
+					</section>
+					<section class="row bg-white p-3 mb-5" id="comentarios">
+						<div class="col-12 py-2 px-3">
+							<div class="row">
+								<div class="col-6">
+									<input type="text" class="form-control" placeholder="Tu nombre" required>
+								</div>
+								<div class="col-6">
+									<input type="email" class="form-control" placeholder="Tu correo" required>
+								</div>
+							</div>
+							<div class="row pt-2">
+								<div class="col-10">
+									<input type="text" class="form-control" placeholder="Deja tu comentario">
+								</div>
+								<div class="col-2 text-right">
+									<button type="button" class="btn btn-primary">Enviar</button>
 								</div>
 							</div>
 						</div>
-					</div>
-				</section>
-				<section class="row my-5 justify-content-center" id="similares">
-					<div class="col-sm-4 col-md-2 card rounded p-0 text-center mx-2 mt-3">
-						<picture style="background-image: url('img/profile-default.png'); background-size: cover; height: 12em;'"></picture>
-						<div class="p-2">
-							<div id="stars">
-								<span class="fa fa-star checked"></span>
-								<span class="fa fa-star"></span>
-								<span class="fa fa-star"></span>
-								<span class="fa fa-star"></span>
-								<span class="fa fa-star"></span>
-								<br><span class="text-gold">100 estrellas</span>
-							</div>
-							<a>
-								<strong class="text-primary">Nombre Cliente</strong><br>
-							</a>
-							<span>Correo Cliente</span><br>
-							<span>Telefono Cliente</span>
-							<a :href="https://wa.me/57" class="btn btn-outline-success"><i class="fab fa-whatsapp"></i></a>
+						<div class="col-12 py-2 px-3">
+							<ul>
+								<li>
+									<h3>Descripcion Comentario</h3>
+									<h6 class="text-primary">
+										<span>Nombre de comentarios</span>,
+										<strong>Correo de comentarios</strong>
+									</h6>
+								</li>
+							</ul>
 						</div>
-					</div>
+					</section>
 				</section>
-				<section class="row bg-white p-3 mb-5" id="comentarios">
-					<div class="col-12 py-2 px-3">
-						<div class="row">
-							<div class="col-6">
-								<input type="text" class="form-control" placeholder="Tu nombre" required>
-							</div>
-							<div class="col-6">
-								<input type="email" class="form-control" placeholder="Tu correo" required>
-							</div>
-						</div>
-						<div class="row pt-2">
-							<div class="col-10">
-								<input type="text" class="form-control" placeholder="Deja tu comentario">
-							</div>
-							<div class="col-2 text-right">
-								<button type="button" class="btn btn-primary">Enviar</button>
-							</div>
-						</div>
-					</div>
-					<div class="col-12 py-2 px-3">
-						<ul>
-							<li>
-								<h3>Descripcion Comentario</h3>
-								<h6 class="text-primary">
-									<span>Nombre de comentarios</span>,
-									<strong>Correo de comentarios</strong>
-								</h6>
-							</li>
-						</ul>
-					</div>
-				</section>
-			</section>
-		<?php endif ?>
-	</main>
-</body>
-</html>
+			<?php endif ?>
+		</main>
+	</body>
+	</html>

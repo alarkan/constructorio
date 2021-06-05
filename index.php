@@ -71,7 +71,6 @@ include_once'include/conexion.php';
 			<div class="container py-5">
 				<div class="row">
 					<?php 
-					$categorias = array("Remodelacion","Reparacion Industria","Arquitecto","Cerrajeria","Cubiertas y Tejados","Dibujo Tecnico","Dibujo profesional","Diseño de Interiores","Electricos","Enchapes","Estructura para Cubiertas","Estuco","Mantenimiento y Reparaciones","Pinturas","Plomeria");
 					for ($i=0; $i < 15; $i++):
 						?>
 						<div class="col-4 p-2">
