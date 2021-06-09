@@ -98,7 +98,7 @@ include_once'include/conexion.php';
 					<img src="img/se-parte-de-nuestro-constructorio.png" class="img-fluid">
 				</div>
 				<div class="col-md-6">
-					<form method="POST" action="index.php">
+					<form method="POST" action="index.php" enctype="multipart/form-data">
 						<div class="row my-3">
 							<div class="col-xs-1 pt-1 d-none d-md-block">
 								<span class="fas fa-key"></span>
@@ -169,10 +169,28 @@ include_once'include/conexion.php';
 						</div>
 						<div class="row mb-3">
 							<div class="col-xs-1 pt-1 d-none d-md-block">
-								<span class="fas fa-eye"></span>
+								<span class="fas fa-tools"></span>
 							</div>
 							<div class="col-md-11">
-								<textarea required class="form-control" id="especialidad" name="especialidad" placeholder="Especialidad"></textarea>
+								<input required class="form-control" id="especialidad" name="especialidad" placeholder="Especialidad"></input>
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-xs-1 pt-1 d-none d-md-block">
+								<span class="fas fa-file-image"></span>
+							</div>
+							<div class="col-md-11">
+								<label class="form-label col-md-4">Imagen de perfil</label>
+								<input class="form-control-sm"  type="file" name="archivo">
+							</div>
+						</div>
+						<div class="row mb-3">
+							<div class="col-xs-1 pt-1 d-none d-md-block">
+								<span class="fas fa-file-archive"></span>
+							</div>
+							<div class="col-md-11">
+								<label class="form-label col-md-4">Trabajos realizados</label>
+								<input class="form-control-sm" type="file" multiple name="file[]">
 							</div>
 						</div>
 						<div class="row justify-content-end">
@@ -430,6 +448,44 @@ include_once'include/conexion.php';
 
 <?php
 if ($_POST) {
+	$archivo = $_FILES['archivo']['name'];
+	if (isset($archivo) && $archivo != "") {
+		$tipo = $_FILES['archivo']['type'];
+		$tamano = $_FILES['archivo']['size'];
+		$temp = $_FILES['archivo']['tmp_name'];
+		if (!((strpos($tipo, "gif") || strpos($tipo, "jpeg") || strpos($tipo, "jpg") || strpos($tipo, "png")) && ($tamano < 2000000))){
+			$_SESSION['message1']= "<script type='text/javascript'>alert('Error. La extensión o el tamaño de los archivos no es correcta, solo se permiten archivos .gif, .jpg, .png. y de 200 kb como máximo.');</script>";
+			header("location:index.php");
+			die();
+		}
+		else{
+			move_uploaded_file($temp, 'img/maestros/'.$archivo);
+		}
+	}else{
+		$archivo = "profile-default.png";
+	}
+
+	
+	for($i=0;$i<5;$i++){
+		$filename = $_FILES['file']['name'][$i];
+
+		if (isset($filename) && $filename != "") {
+		$tipo2 = $_FILES['file']['type'][$i];
+		$tamano2 = $_FILES['file']['size'][$i];
+		$temp2 = $_FILES['file']['tmp_name'][$i];
+		if (!((strpos($tipo2, "gif") || strpos($tipo2, "jpeg") || strpos($tipo2, "jpg") || strpos($tipo2, "png")) && ($tamano2 < 2000000))){
+			$_SESSION['message1']= "<script type='text/javascript'>alert('Error. La extensión o el tamaño de los archivos no es correcta, solo se permiten archivos .gif, .jpg, .png. y de 200 kb como máximo.');</script>";
+			header("location:index.php");
+			die();
+		}
+		else{
+			move_uploaded_file($_FILES['file']['tmp_name'][$i],'img/maestros/'.$filename);
+		}
+	}else{
+		$filename = "profile-default.png";
+	}
+	}
+
 	$cedula = $_POST['cedula'];
 	$nombres = $_POST['nombres'];
 	$apellidos = $_POST['apellidos'];
@@ -438,7 +494,6 @@ if ($_POST) {
 	$ocupacion = $_POST['ocupacion'];
 	$ciudad = $_POST['ciudad'];
 	$especialidad = $_POST['especialidad'];
-
 	$sentencia = $mysqli->prepare("SELECT * FROM maestro WHERE cedula=?");
 	$sentencia->bind_param("i", $cedula);
 	$sentencia->execute();  
@@ -448,8 +503,8 @@ if ($_POST) {
 		$_SESSION['message1']= "<script type='text/javascript'>alert('¡Error!.El Maestro con identificacion ".$cedula." ya existe verifique el valor ingresado');</script>";
 		header("location:index.php");
 	}else{
-		$sql_insertar = $mysqli->prepare("INSERT INTO maestro(cedula,nombres,apellidos,correo,telefono, ocupacion,ciudad,especialidad) VALUES (?,?,?,?,?,?,?,?)");
-		$sql_insertar->bind_param("ssssssss",$cedula,$nombres,$apellidos,$correo,$telefono,$ocupacion,$ciudad,$especialidad);
+		$sql_insertar = $mysqli->prepare("INSERT INTO maestro(cedula,nombres,apellidos,correo,telefono, ocupacion,ciudad,especialidad,imagen) VALUES (?,?,?,?,?,?,?,?,?)");
+		$sql_insertar->bind_param("sssssssss",$cedula,$nombres,$apellidos,$correo,$telefono,$ocupacion,$ciudad,$especialidad,$archivo);
 		$sql_insertar->execute(); 
 		$_SESSION['message1']= "<script type='text/javascript'>alert('Registro Exitoso');</script>";
 		header("location:index.php");

@@ -66,8 +66,9 @@ include_once'include/conexion.php';
 			if($_POST):
 				$ciudad = $_POST['ciudad'];
 				$categoria = $_SESSION['categoria'];
-				$sentencia = $mysqli->prepare("SELECT * FROM maestro WHERE ciudad=? AND ocupacion=?");
-				$sentencia->bind_param("ss", $ciudad,$categoria);
+				$estado = 1;
+				$sentencia = $mysqli->prepare("SELECT * FROM maestro WHERE ciudad=? AND ocupacion=? AND estado=?");
+				$sentencia->bind_param("ssi", $ciudad,$categoria,$estado);
 				$sentencia->execute();  
 				$resultado = $sentencia->get_result();
 				$fila = $resultado->fetch_assoc();
@@ -87,7 +88,7 @@ include_once'include/conexion.php';
 						<div class="col-md-6 px-3">
 							<div class="row pl-3">
 								<div class="col-md-4">
-									<img src="img/profile-default.png" class="img-fluid" style="border-radius: 25px 0 25px 0">
+									<img src="<?php echo "img/maestros/".$fila['imagen']?>" class="img-fluid" style="border-radius: 25px 0 25px 0">
 								</div>
 								<div class="col-md-8">
 									<div id="stars">
@@ -102,7 +103,7 @@ include_once'include/conexion.php';
 									<p class="text-white py-1"><?php echo $fila['especialidad']?></p>
 									<ul class="text-white">
 										<li class="text-muted">Email: <strong class="text-white"><?php echo $fila['correo']?></strong></li>
-										<li class="text-muted">Profesión: <strong class="text-white"><?php echo $fila['ocupacion']?></strong></li>
+										<li class="text-muted">Profesión: <strong class="text-white"><?php echo $categorias[$fila['ocupacion']-1]?></strong></li>
 										<li class="text-muted">Ciudad: <strong class="text-white"><?php echo $fila['ciudad']?></strong></li>
 									</ul>
 									<a href="https://wa.me/57<?php echo $fila['telefono']?>" class="btn btn-outline-success">Contactar &nbsp; <i class="fab fa-whatsapp"></i></a>

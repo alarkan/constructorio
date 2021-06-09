@@ -16,6 +16,10 @@ $resultado = $sentencia->get_result();
 </head>
 <body>
 	<div class="container" style="text-align: center;">
+		<strong>Bienvenido <?php echo $_SESSION['usuario'];?></strong>
+		<br>
+		<br>
+		<a href="cerrar_sesion.php"><button>Cerrar Sesi&oacute;n</button></a>
 		<h1>Lista de Maestros</h1>
 		<input style="border:rgb(13,105,172) 5px outset;" id="buscar" type="text" placeholder="Barra de busqueda..." size="25">
 		<table id="tabla" style="margin: 0 auto;" border="1">
@@ -68,6 +72,9 @@ $resultado = $sentencia->get_result();
 								echo 'Publicado';
 							}
 							?>
+						</td>
+						<td>
+							<img src="<?php echo "img/".$solicitud['imagen']; ?>" style="height: 100px;width: 100px;">
 						</td>
 						<td>
 							<a href="editar.php?id=<?php echo $solicitud['id'];?>">Editar</a>
