@@ -14,7 +14,7 @@ include_once'include/conexion.php';
 	<style>
 	body{ font-family: 'Century Gothic'; margin: 0; padding: 0 }
 	#banner{ background-image: url('img/fondo-banner-3.jpg');background-size:cover;height: 100vh;background-position: center}
-	#services{ background-image: url('img/fondo-azul.jpg'); background-size: cover; background-position: center}
+	#services{background-color: #212121}
 	.nav-link img{ width: 120px }
 	#last-works{ background-color: #F1BD02 }
 	#video{ background-image: url('img/fondo-video.jpg'); background-size: cover; background-position: center }
@@ -69,10 +69,36 @@ include_once'include/conexion.php';
 
 		<div class="container-fluid px-0" id="services">
 			<div class="container py-5">
+				<h1 class="text-center text-white">
+					<strong style="font-weight: 800">
+						Categorias especializadas
+					</strong>
+				</h1>
 				<div class="row">
 					<?php 
-					for ($i=0; $i < 15; $i++):
-						?>
+					for ($i=0; $i < 3; $i++):?>
+						<div class="col-4 p-2">
+							<a href="perfil.php?category=<?php echo $i+1;?>" class="btn btn-block bg-smoke">
+								<div class="row">
+									<div class="col-md-3">
+										<img src="img/categorias/<?php echo $i ?>.png" class="img-fluid">
+									</div>
+									<div class="col text-left pt-3 pr-2">
+										<span class="h5"><?php echo $categorias[$i];?></span>
+									</div>
+								</div>
+							</a>
+						</div>
+					<?php endfor ?>
+				</div>
+				<h1 class="text-center text-white">
+					<strong style="font-weight: 800">
+						Categorias Varias
+					</strong>
+				</h1>
+				<div class="row">
+					<?php 
+					for ($i=3; $i < 15; $i++):?>
 						<div class="col-4 p-2">
 							<a href="perfil.php?category=<?php echo $i+1;?>" class="btn btn-block bg-smoke">
 								<div class="row">
@@ -297,12 +323,11 @@ include_once'include/conexion.php';
 		</div>
 	</div>
 	<a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
-		<span class="carousel-control-prev-icon" aria-hidden="true"></span>
-		<span class="sr-only"></span>
+		<span class="carousel-control-prev-icon" style="background-image: url('img/nav-prev.png');"></span>
+		
 	</a>
 	<a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
-		<span class="carousel-control-next-icon" aria-hidden="true"></span>
-		<span class="sr-only"></span>
+		<span class="carousel-control-next-icon" style="background-image: url('img/nav-next.png');"></span>
 	</a>
 </div>
 
@@ -310,7 +335,7 @@ include_once'include/conexion.php';
 	<div class="row justify-content-center p-5">
 		<div class="col-md-7">
 			<div class="video-container sombra img-rounded">
-				<iframe src="https://www.youtube.com/embed/44MCEFWyRrE" frameborder="0" width="560" height="315" allowfullscreen></iframe>
+				<iframe src="https://www.youtube.com/embed/JO4WyfuJRc8" frameborder="0" width="560" height="315" allowfullscreen></iframe>
 			</div>
 		</div>
 	</div>
@@ -459,33 +484,37 @@ if ($_POST) {
 			die();
 		}
 		else{
-			move_uploaded_file($temp, 'img/maestros/'.$archivo);
+			move_uploaded_file($temp, 'img/maestros/'.time().$archivo);
+			$archivo = time().$_FILES['archivo']['name'];
 		}
 	}else{
 		$archivo = "profile-default.png";
 	}
 
 	
-	for($i=0;$i<5;$i++){
-		$filename = $_FILES['file']['name'][$i];
+	$countfiles = count($_FILES['file']['name']);
+	if ($countfiles > 6) {
+		$countfiles = 6;
+	}
+	var_dump($countfiles);
+	for($i=0;$i<$countfiles;$i++){
+		$filename = time().$_FILES['file']['name'][$i];
 
 		if (isset($filename) && $filename != "") {
-		$tipo2 = $_FILES['file']['type'][$i];
-		$tamano2 = $_FILES['file']['size'][$i];
-		$temp2 = $_FILES['file']['tmp_name'][$i];
-		if (!((strpos($tipo2, "gif") || strpos($tipo2, "jpeg") || strpos($tipo2, "jpg") || strpos($tipo2, "png")) && ($tamano2 < 2000000))){
-			$_SESSION['message1']= "<script type='text/javascript'>alert('Error. La extensión o el tamaño de los archivos no es correcta, solo se permiten archivos .gif, .jpg, .png. y de 200 kb como máximo.');</script>";
-			header("location:index.php");
-			die();
+			$tipo2 = $_FILES['file']['type'][$i];
+			$tamano2 = $_FILES['file']['size'][$i];
+			$temp2 = $_FILES['file']['tmp_name'][$i];
+			if (!((strpos($tipo2, "gif") || strpos($tipo2, "jpeg") || strpos($tipo2, "jpg") || strpos($tipo2, "png")) && ($tamano2 < 2000000))){
+				echo "<script type='text/javascript'>alert('Error. La extensión o el tamaño de los archivos no es correcta, solo se permiten archivos .gif, .jpg, .png. y de 200 kb como máximo.');</script>";
+			}
+			else{
+				move_uploaded_file($_FILES['file']['tmp_name'][$i],'img/maestros/'.$filename);
+				$fotos[$i] = $filename;
+			}
 		}
-		else{
-			move_uploaded_file($_FILES['file']['tmp_name'][$i],'img/maestros/'.$filename);
-		}
-	}else{
-		$filename = "profile-default.png";
-	}
 	}
 
+	$fotos = serialize($fotos);
 	$cedula = $_POST['cedula'];
 	$nombres = $_POST['nombres'];
 	$apellidos = $_POST['apellidos'];
@@ -503,8 +532,8 @@ if ($_POST) {
 		$_SESSION['message1']= "<script type='text/javascript'>alert('¡Error!.El Maestro con identificacion ".$cedula." ya existe verifique el valor ingresado');</script>";
 		header("location:index.php");
 	}else{
-		$sql_insertar = $mysqli->prepare("INSERT INTO maestro(cedula,nombres,apellidos,correo,telefono, ocupacion,ciudad,especialidad,imagen) VALUES (?,?,?,?,?,?,?,?,?)");
-		$sql_insertar->bind_param("sssssssss",$cedula,$nombres,$apellidos,$correo,$telefono,$ocupacion,$ciudad,$especialidad,$archivo);
+		$sql_insertar = $mysqli->prepare("INSERT INTO maestro(cedula,nombres,apellidos,correo,telefono, ocupacion,ciudad,especialidad,imagen,fotos) VALUES (?,?,?,?,?,?,?,?,?,?)");
+		$sql_insertar->bind_param("ssssssssss",$cedula,$nombres,$apellidos,$correo,$telefono,$ocupacion,$ciudad,$especialidad,$archivo,$fotos);
 		$sql_insertar->execute(); 
 		$_SESSION['message1']= "<script type='text/javascript'>alert('Registro Exitoso');</script>";
 		header("location:index.php");

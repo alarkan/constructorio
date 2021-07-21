@@ -16,7 +16,7 @@ include_once'include/conexion.php';
 	}
 	body{
 		font-family: 'Century Gothic';
-		background-image: url('img/fondo-azul.jpg');
+		background-color: #212121;
 		background-attachment: fixed;
 		background-size: cover
 	}
@@ -81,99 +81,148 @@ include_once'include/conexion.php';
 					<section class="row justify-content-center" id="cabecera">
 						<div class="col-md-6 text-center mb-1 mt-0s">
 							<a href="index.php"><img src="img/logo-constructorio.png" class="img-fluid px-5"></a>
-							<p class="h4 text-white mt-3">¡AQUÍ LO ENCUENTRAS TODO!</p>
+							<p class="h4 text-white"><strong>¡AQUÍ LO ENCUENTRAS TODO!</strong></p>
 						</div>
 					</section>
-					<section class="row pt-5 justify-content-center" id="contenido">
-						<div class="col-md-6 px-3">
-							<div class="row pl-3">
-								<div class="col-md-4">
-									<img src="<?php echo "img/maestros/".$fila['imagen']?>" class="img-fluid" style="border-radius: 25px 0 25px 0">
-								</div>
-								<div class="col-md-8">
-									<div id="stars">
-										<span class="fa fa-star checked"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span>
-										<span class="fa fa-star"></span><br>
-										<span class="text-gold">100 estrellas</span>
+					<div id="myCarousel" class="carousel carousel-dark slide" data-ride="carousel">
+						<div class="carousel-inner" role="listbox">
+							<div class="carousel-item active">
+								<div class="row">
+									<div class="col-md-12">
+										<section class="row pt-5 justify-content-center" id="contenido">
+											<div class="col-md-3 mb-1">
+												<div>
+													<a href="https://tienda.ferremaster.com/"><img src="https://ecommerce.ferremaster.com/backend/admin/backend/web/archivosDelCliente/anuncios/images/47112710108.jpg" class="img-fluid"></a>
+												</div>
+												
+											</div>
+											<div class="col-md-6 px-3">
+												<div class="row pl-3">
+													<div class="col-md-4">
+														<img src="<?php echo "img/maestros/".$fila['imagen']?>" class="img-fluid" style="border-radius: 25px 0 25px 0">
+													</div>
+													<div class="col-md-8">
+														<div id="stars">
+															<span class="fa fa-star checked"></span>
+															<span class="fa fa-star"></span>
+															<span class="fa fa-star"></span>
+															<span class="fa fa-star"></span>
+															<span class="fa fa-star"></span><br>
+															<span class="text-gold">100 estrellas</span>
+														</div>
+														<h1 class="text-white py-2"><?php echo $fila['nombres']." ".$fila['apellidos'] ?></h1>
+														<p class="text-white py-1"><?php echo $fila['especialidad']?></p>
+														<ul class="text-white">
+															<li class="text-muted">Email: <strong class="text-white"><?php echo $fila['correo']?></strong></li>
+															<li class="text-muted">Profesión: <strong class="text-white"><?php echo $categorias[$fila['ocupacion']-1]?></strong></li>
+															<li class="text-muted">Ciudad: <strong class="text-white"><?php echo $fila['ciudad']?></strong></li>
+														</ul>
+														<a href="https://wa.me/57<?php echo $fila['telefono']?>" class="btn btn-outline-success">Contactar &nbsp; <i class="fab fa-whatsapp"></i></a>
+													</div>
+												</div>
+												<div class="row pl-3">
+													<div class="col-md-12">
+														<div class="row">
+															<div class="col-md-12 mb-3 text-center pt-3">
+																<span class="text-white h3">Trabajos Realizados</span>
+															</div>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div class="col-md-3 mb-1">
+												<div>
+													<a href="https://tienda.ferremaster.com/catalogo-ferreteria-master"><img src="https://ecommerce.ferremaster.com/backend/admin/backend/web/archivosDelCliente/anuncios/images/4711324974.jpg" class="img-fluid">
+													</a>
+												</div>
+											</div>
+										</section>
+										<section class="row justify-content-center" id="similares">
+											<?php $datos = unserialize($fila['fotos']);
+											for ($i=0; $i < count($datos); $i++):?>
+												<div class="col-md-4 pb-1">
+													<img src="<?php echo "img/maestros/".$datos[$i] ?>" class="w-100"style="object-fit:cover; height: 200px;"/>
+												</div>
+											<?php endfor ?>
+										</section>
 									</div>
-									<h1 class="text-white py-2"><?php echo $fila['nombres']." ".$fila['apellidos'] ?></h1>
-									<p class="text-white py-1"><?php echo $fila['especialidad']?></p>
-									<ul class="text-white">
-										<li class="text-muted">Email: <strong class="text-white"><?php echo $fila['correo']?></strong></li>
-										<li class="text-muted">Profesión: <strong class="text-white"><?php echo $categorias[$fila['ocupacion']-1]?></strong></li>
-										<li class="text-muted">Ciudad: <strong class="text-white"><?php echo $fila['ciudad']?></strong></li>
-									</ul>
-									<a href="https://wa.me/57<?php echo $fila['telefono']?>" class="btn btn-outline-success">Contactar &nbsp; <i class="fab fa-whatsapp"></i></a>
 								</div>
 							</div>
-							<div class="row pl-3">
-								<div class="col-md-12">
+							<?php while($fila = $resultado->fetch_assoc()): ?>
+								<div class="carousel-item">
 									<div class="row">
-										<div class="col-md-12 mb-3 text-center pt-3">
-											<span class="text-white h3">Conoce mi trabajo</span>
+										<div class="col-md-12">
+											<section class="row pt-5 justify-content-center" id="contenido">
+												<div class="col-md-3 mb-1">
+													<div>
+														<a href="https://tienda.ferremaster.com/"><img src="https://ecommerce.ferremaster.com/backend/admin/backend/web/archivosDelCliente/anuncios/images/47112710108.jpg" class="img-fluid"></a>
+													</div>
+												</div>
+												<div class="col-md-6 px-3">
+													<div class="row pl-3">
+														<div class="col-md-4">
+															<img src="<?php echo "img/maestros/".$fila['imagen']?>" class="img-fluid" style="border-radius: 25px 0 25px 0">
+														</div>
+														<div class="col-md-8">
+															<div id="stars">
+																<span class="fa fa-star checked"></span>
+																<span class="fa fa-star"></span>
+																<span class="fa fa-star"></span>
+																<span class="fa fa-star"></span>
+																<span class="fa fa-star"></span><br>
+																<span class="text-gold">100 estrellas</span>
+															</div>
+															<h1 class="text-white py-2"><?php echo $fila['nombres']." ".$fila['apellidos'] ?></h1>
+															<p class="text-white py-1"><?php echo $fila['especialidad']?></p>
+															<ul class="text-white">
+																<li class="text-muted">Email: <strong class="text-white"><?php echo $fila['correo']?></strong></li>
+																<li class="text-muted">Profesión: <strong class="text-white"><?php echo $categorias[$fila['ocupacion']-1]?></strong></li>
+																<li class="text-muted">Ciudad: <strong class="text-white"><?php echo $fila['ciudad']?></strong></li>
+															</ul>
+															<a href="https://wa.me/57<?php echo $fila['telefono']?>" class="btn btn-outline-success">Contactar &nbsp; <i class="fab fa-whatsapp"></i></a>
+														</div>
+													</div>
+													<div class="row pl-3">
+														<div class="col-md-12">
+															<div class="row">
+																<div class="col-md-12 mb-3 text-center pt-3">
+																	<span class="text-white h3">Trabajos Realizados</span>
+																</div>
+															</div>
+														</div>
+													</div>
+												</div>
+												<div class="col-md-3 mb-1">
+													<div>
+														<a href="https://tienda.ferremaster.com/catalogo-ferreteria-master"><img src="https://ecommerce.ferremaster.com/backend/admin/backend/web/archivosDelCliente/anuncios/images/4711324974.jpg" class="img-fluid">
+														</a>
+													</div>
+												</div>
+											</section>
+											<section class="row justify-content-center" id="similares">
+												<?php $datos = unserialize($fila['fotos']);
+												for ($i=0; $i < count($datos); $i++):?>
+													<div class="col-md-4 pb-1">
+														<img src="<?php echo "img/maestros/".$datos[$i] ?>" class="w-100"style="object-fit:cover; height: 200px; width:200px;"/>
+													</div>
+												<?php endfor ?>
+											</section>
 										</div>
 									</div>
 								</div>
-							</div>
+							<?php endwhile ?>
 						</div>
-					</section>
-					<section class="row my-5 justify-content-center" id="similares">
-						<div class="col-sm-4 col-md-2 card rounded p-0 text-center mx-2 mt-3">
-							<picture style="background-image: url('img/profile-default.png'); background-size: cover; height: 12em;'"></picture>
-							<div class="p-2">
-								<div id="stars">
-									<span class="fa fa-star checked"></span>
-									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span>
-									<span class="fa fa-star"></span>
-									<br><span class="text-gold">100 estrellas</span>
-								</div>
-								<a>
-									<strong class="text-primary">Nombre Cliente</strong><br>
-								</a>
-								<span>Correo Cliente</span><br>
-								<span>Telefono Cliente</span>
-								<a :href="https://wa.me/57" class="btn btn-outline-success"><i class="fab fa-whatsapp"></i></a>
-							</div>
-						</div>
-					</section>
-					<section class="row bg-white p-3 mb-5" id="comentarios">
-						<div class="col-12 py-2 px-3">
-							<div class="row">
-								<div class="col-6">
-									<input type="text" class="form-control" placeholder="Tu nombre" required>
-								</div>
-								<div class="col-6">
-									<input type="email" class="form-control" placeholder="Tu correo" required>
-								</div>
-							</div>
-							<div class="row pt-2">
-								<div class="col-10">
-									<input type="text" class="form-control" placeholder="Deja tu comentario">
-								</div>
-								<div class="col-2 text-right">
-									<button type="button" class="btn btn-primary">Enviar</button>
-								</div>
-							</div>
-						</div>
-						<div class="col-12 py-2 px-3">
-							<ul>
-								<li>
-									<h3>Descripcion Comentario</h3>
-									<h6 class="text-primary">
-										<span>Nombre de comentarios</span>,
-										<strong>Correo de comentarios</strong>
-									</h6>
-								</li>
-							</ul>
-						</div>
-					</section>
+						<a class="carousel-control-prev" href="#myCarousel" role="button" data-slide="prev">
+							<span class="carousel-control-prev-icon" style="background-image: url('img/nav-prev.png');"></span>
+						</a>
+						<a class="carousel-control-next" href="#myCarousel" role="button" data-slide="next">
+							<span class="carousel-control-next-icon" style="background-image: url('img/nav-next.png');"></span>
+						</a>
+					</div>
 				</section>
 			<?php endif ?>
 		</main>
+		<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js" integrity="sha384-DfXdz2htPH0lsSSs5nCTpuj/zy4C+OGpamoFVy38MVBnE+IbbVYUew+OrCXaRkfj" crossorigin="anonymous"></script>
+		<script src="https://cdn.jsdelivr.net/npm/bootstrap@4.6.0/dist/js/bootstrap.min.js" integrity="sha384-+YQ4JLhjyBLPDQt//I+STsc9iw4uQqACwlvpslubQzn4u2UU2UFM80nGisd026JF" crossorigin="anonymous"></script>
 	</body>
 	</html>

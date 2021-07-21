@@ -15,6 +15,8 @@ $resultado = $sentencia->get_result();
 	<title>Constructorio</title>
 </head>
 <body>
+	<script src="include/busqueda.js"></script>
+	<script type="text/javascript">btab('buscar', 'tabla'); // Iniciamos la funcion...</script>
 	<div class="container" style="text-align: center;">
 		<strong>Bienvenido <?php echo $_SESSION['usuario'];?></strong>
 		<br>
@@ -34,6 +36,8 @@ $resultado = $sentencia->get_result();
 					<th>Ciudad</th>
 					<th>Especialidad</th>
 					<th>Estado</th>
+					<th>Perfil</th>
+					<th>Trabajos</th>
 					<th>Editar</th>
 				</tr>
 			</thead>
@@ -74,7 +78,14 @@ $resultado = $sentencia->get_result();
 							?>
 						</td>
 						<td>
-							<img src="<?php echo "img/".$solicitud['imagen']; ?>" style="height: 100px;width: 100px;">
+							<img src="<?php echo "img/maestros/".$solicitud['imagen']; ?>" style="height: 100px;width: 100px;">
+						</td>
+						<td>
+							<?php 
+							$datos = unserialize($solicitud['fotos']);
+							for ($i=0; $i < count($datos); $i++):?>
+								<img src="<?php echo "img/maestros/".$datos[$i] ?>" style="height: 100px;width: 100px;">
+							<?php endfor ?>
 						</td>
 						<td>
 							<a href="editar.php?id=<?php echo $solicitud['id'];?>">Editar</a>
