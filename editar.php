@@ -1,6 +1,11 @@
 <?php
 ob_start();
 session_start();
+use PHPMailer\PHPMailer\PHPMailer;
+use PHPMailer\PHPMailer\Exception;
+require 'phpmailer/Exception.php';
+require 'phpmailer/PHPMailer.php';
+require 'phpmailer/SMTP.php';
 include_once'include/conexion.php'; 
 if ($_SESSION['usuario']!='mercadeo.palmira') {
 	header('location:login.php');
@@ -12,7 +17,7 @@ if($_GET){
 	$sentencia->execute();  
 	$res= $sentencia->get_result();
 	$resultado = $res->fetch_assoc();
-} 
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -20,14 +25,20 @@ if($_GET){
 	<title>Constructorio</title>
 </head>
 <body>
-	<div class="container" style="text-align: center;">
+	<div style="text-align: center;">
 		<h1>Editar Maestro</h1>
+		<a href="home.php">Regresar a Inicio</a>
+		<?php  if (isset($_SESSION['message3'])) { ?>
+			<?= $_SESSION['message3']?>
+			<?php $_SESSION['message3'] = "";} ?>
+		</div>
+		<br>
 		<form action="editar.php" method="POST">
-			<table style="margin: 0 auto;">
+			<table style="margin: 0 auto;" border>
 				<tbody>
 					<tr>
 						<td><label>Cedula:</label></td>
-						<td><input name="cedula" type="text" value="<?php echo $resultado['cedula'] ?>"></td>
+						<td><input readonly name="cedula" type="text" value="<?php echo $resultado['cedula'] ?>"></td>
 					</tr>
 					<tr>
 						<td><label>Nombres:</label></td>
@@ -58,7 +69,14 @@ if($_GET){
 					</tr>
 					<tr>
 						<td><label>Ciudad:</label></td>
-						<td><input name="ciudad" type="text" value="<?php echo $resultado['ciudad'] ?>"></td>
+						<td>
+							<select name="ciudad">
+								<option value="<?php echo $resultado['ciudad'] ?>"><?php echo $resultado['ciudad'] ?></option>
+								<option value="Buga">Buga</option>
+								<option value="Palmira">Palmira</option>
+								<option value="Tulua">Tuluá</option>
+							</select>
+						</td>
 					</tr>
 					<tr>
 						<td><label>Especialidad:</label></td>
@@ -76,36 +94,99 @@ if($_GET){
 					</tr>
 					<input name="id" type="hidden" value="<?php echo $resultado['id'] ?>">
 				</tbody>
-			</table>
-			<button type="submit">Actualizar</button>
+				<tfoot>
+					<tr><td style="text-align: center;" colspan="2"><button type="submit">Actualizar Datos</button></td></tr>
+				</tfoot>
+			</table>	
 		</form>
-		<br>
-		<a href="home.php">Regresar a Inicio</a>
-		<?php  if (isset($_SESSION['message3'])) { ?>
-			<?= $_SESSION['message3']?>
-			<?php $_SESSION['message3'] = "";} ?>
-		</div>
+
+		<table  style="margin: 0 auto;">
+			<tr>
+				<td>
+					<p>Foto de Perfil</p>
+					<img style="height: 100px;width: 100px;"src="img/maestros/<?php echo $resultado['imagen'] ?>">
+				</td>
+			</tr>
+			<tr>
+				<td>
+					<p>Trabajos Realizados</p>
+					<?php 
+					$datos = unserialize($resultado['fotos']);
+					for ($i=0; $i < count($datos); $i++):?>
+						<img src="<?php echo "img/maestros/".$datos[$i] ?>" style="height: 100px;width: 100px;">
+					<?php endfor ?>
+				</td>
+			</tr>
+		</table>
 	</body>
 	</html>
-
 	<?php
 	if ($_POST) {
+		$cedula = $_POST['cedula'];
 		$id = $_POST['id'];
 		$nombres= $_POST['nombres'];
 		$apellidos= $_POST['apellidos'];
-		$cedula= $_POST['cedula'];
 		$telefono= $_POST['telefono'];
 		$correo= $_POST['correo'];
 		$ocupacion= $_POST['ocupacion'];
 		$ciudad= $_POST['ciudad'];
 		$especialidad= $_POST['especialidad'];
 		$estado= $_POST['estado'];
-		$sentencia2 = $mysqli->prepare("UPDATE maestro SET cedula=?,nombres=?,apellidos=?,correo=?,telefono=?,ocupacion=?,ciudad=?,especialidad=?,estado=? WHERE id=?");
-		$sentencia2->bind_param("sssssissss", $cedula,$nombres,$apellidos,$correo,$telefono,$ocupacion,$ciudad,$especialidad,$estado,$id);
-		$sentencia2->execute();  
+		$sentencia2 = $mysqli->prepare("UPDATE maestro SET nombres=?,apellidos=?,correo=?,telefono=?,ocupacion=?,ciudad=?,especialidad=?,estado=? WHERE id=?");
+		$sentencia2->bind_param("ssssissss",$nombres,$apellidos,$correo,$telefono,$ocupacion,$ciudad,$especialidad,$estado,$id);
+		$sentencia2->execute();
+		if($estado == 1){
+			$sentencia3 = $mysqli->prepare('SELECT * FROM usuario WHERE nombre = ?');
+			$sentencia3->bind_param("s", $cedula);
+			$sentencia3->execute(); 
+			$res2= $sentencia3->get_result();
+			$resultado2 = $res2->fetch_assoc();
+			if(!$resultado2){
+				$uniqidStr = md5(uniqid(mt_rand()));
+				$sql_insertar = $mysqli->prepare("INSERT INTO usuario(nombre, contrasena, olvidoclave, email) VALUES (?,?,?,?)");
+				$sql_insertar->bind_param("ssss",$cedula,$uniqidStr,$uniqidStr,$correo);
+				$sql_insertar->execute();
+				$mail = new PHPMailer();
+				$mail->isSMTP();
+				$mail->SMTPDebug = 2;
+				$mail->Host = 'smtp.gmail.com';
+				$mail->Port = 587;
+				$mail->SMTPSecure = PHPMailer::ENCRYPTION_STARTTLS;
+				$mail->SMTPAuth = true;
+				$mail->Username = 'sstferremaster@gmail.com';
+				$mail->Password = 'vengadoresunidos';
+				$mail->setFrom('sstferremaster@gmail.com', 'Admin');
+				$mail->addAddress($correo);
+				$mail->Subject = 'Registro Exitoso en Constructorio Master';
+				$mail->msgHTML('Estimado '.$nombres.', <br/>Recientemente se envio una solicitud para ser parte del constructorio de ferreteria Master Si esto fue un error, simplemente ignore este correo electronico y no sucedera nada.
+					<br/>Para restablecer su contrasena, visite el siguiente enlace: <a href="http://localhost/constructorio/resetclave.php?fp_code='.$uniqidStr.'">http://localhost/constructorio/resetclave.php?fp_code='.$uniqidStr.'</a>
+					<br/><br/>');
 
-		$_SESSION['message3']= "<script type='text/javascript'>alert('Actualizacion Exitosa');</script>";
-		header('location:editar.php?id='.$id);	
+				$mail->SMTPOptions = array(
+					'ssl' => array(
+						'verify_peer' => false,
+						'verify_peer_name' => false,
+						'allow_self_signed' => true
+					)
+				);
+				if (!$mail->send()) {
+					echo 'Mailer Error: ' . $mail->ErrorInfo;
+				} else {
+					echo 'Message sent!';
+				}
+
+				function save_mail($mail)
+				{
+					$path = '{imap.gmail.com:993/imap/ssl}[Gmail]/Sent Mail';
+					$imapStream = imap_open($path, $mail->Username, $mail->Password);
+					$result = imap_append($imapStream, $path, $mail->getSentMIMEMessage());
+					imap_close($imapStream);
+					return $result;
+				}
+			}
+		}  
+		$_SESSION['message3'] ="<script type='text/javascript'>alert('Actualizacion Exitosa');</script>";
+		header('location:editar.php?id='.$id);
 	}
 	ob_end_flush();
 	?>

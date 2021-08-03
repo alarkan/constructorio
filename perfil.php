@@ -20,7 +20,6 @@ include_once'include/conexion.php';
 		background-attachment: fixed;
 		background-size: cover
 	}
-	.text-primary{ color: steelblue !important }
 	.text-gold{ color: #F1BD02 !important }
 	.bg-dark{
 		background-size: cover; background-repeat: no-repeat;

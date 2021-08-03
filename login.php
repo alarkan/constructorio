@@ -68,8 +68,11 @@ include_once'include/conexion.php';
 
   if (password_verify($contrasena, $fila['contrasena'])) {
     $_SESSION['usuario'] = $nombre_usuario;
-    header('location:home.php');
-
+    if ($_SESSION['usuario']!='mercadeo.palmira') {
+      header('location:inicio.php');
+    }else{ 
+      header('location:home.php');
+    }
   }else{
     $_SESSION['message'] = 'Verificar la contrase&ntilde;a';
     header('location:login.php');

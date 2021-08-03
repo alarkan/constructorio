@@ -24,7 +24,6 @@ include_once'include/conexion.php';
 	.video-container embed{ position: absolute; top: 0; left: 0; width: 100%; height: 100%; }
 	.bg-smoke{ background-color: #f3f5f9 !important }
 	a.bg-smoke{text-transform: none !important;text-decoration: none !important;color: inherit !important;height: 100% !important}
-	.icon-fluid{ max-width: 100px !important; max-height: 100px !important }
 </style>
 </head>
 <body>
@@ -48,7 +47,7 @@ include_once'include/conexion.php';
 								</a>
 							</li>
 							<li class="nav-item mr-3 mt-lg-0 mt-3">
-								<a class="nav-link" href="#banner">
+								<a class="nav-link" href="login.php">
 									<img src="img/boton-nav-agendate.png">
 								</a>
 							</li>
@@ -491,12 +490,10 @@ if ($_POST) {
 		$archivo = "profile-default.png";
 	}
 
-	
 	$countfiles = count($_FILES['file']['name']);
 	if ($countfiles > 6) {
 		$countfiles = 6;
 	}
-	var_dump($countfiles);
 	for($i=0;$i<$countfiles;$i++){
 		$filename = time().$_FILES['file']['name'][$i];
 
