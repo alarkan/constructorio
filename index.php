@@ -38,17 +38,17 @@ include_once'include/conexion.php';
 						<ul class="navbar-nav text-center">
 							<li class="nav-item mr-3 mt-lg-0 mt-3">
 								<a class="nav-link scroll" href="#services">
-									<img src="img/boton-nav-inicio.png">
+									<button class="btn btn-warning">CATEGORIAS</button>
 								</a>
 							</li>
 							<li class="nav-item mr-3 mt-lg-0 mt-3">
 								<a class="nav-link scroll" href="#register">
-									<img src="img/boton-nav-registro.png">
+									<button class="btn btn-warning">REGISTRO</button>
 								</a>
 							</li>
 							<li class="nav-item mr-3 mt-lg-0 mt-3">
 								<a class="nav-link" href="login.php">
-									<img src="img/boton-nav-agendate.png">
+									<button class="btn btn-warning">INICIAR SESIÓN</button>
 								</a>
 							</li>
 						</ul>
@@ -183,49 +183,87 @@ include_once'include/conexion.php';
 									</div>
 									<div class="col-md-10">
 										<select required class="form-control" id="ciudad" name="ciudad">
-											<option value="">Ciudad</option>
-											<option value="Buga">Buga</option>
-											<option value="Palmira">Palmira</option>
-											<option value="Tulua">Tuluá</option>
-										</select>
+											<option selected>Abrir Seleccion</option>
+											<?php $count = count($valleCauca); for ($i=0; $i < $count; $i++): ?>
+											<option value="<?php echo $valleCauca[$i];?>"><?php echo $valleCauca[$i];?></option>
+										<?php endfor ?>
+									</select>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-xs-1 pt-1 d-none d-md-block">
+							<span class="fas fa-tools"></span>
+						</div>
+						<div class="col-md-11">
+							<textarea required class="form-control" id="especialidad" name="especialidad" placeholder="Especialidad"></textarea>
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-xs-1 pt-1 d-none d-md-block">
+							<span class="fas fa-file-image"></span>
+						</div>
+						<div class="col-md-11">
+							<label class="form-label col-md-4">Imagen de perfil</label>
+							<input class="form-control-sm"  type="file" name="archivo">
+						</div>
+					</div>
+					<div class="row mb-3">
+						<div class="col-xs-1 pt-1 d-none d-md-block">
+							<span class="fas fa-file-archive"></span>
+						</div>
+						<div class="col-md-11">
+							<label class="form-label col-md-4">Trabajos realizados</label>
+							<input class="form-control-sm" type="file" multiple name="file[]">
+						</div>
+					</div>
+					<div class="row justify-content-end">
+						<div class="col-md-4 mr-4"><button type="button" class="btn btn-warning btn-block" data-toggle="modal" data-target="#exampleModal">
+							Enviar
+						</button></div>
+
+						<div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+							<div class="modal-dialog modal-lg" role="document">
+								<div class="modal-content">
+									<div class="modal-header">
+										<h5 class="modal-title" id="exampleModalLabel"><strong>AUTORIZACIÓN DE TRATAMIENTO DE DATOS PERSONALES</strong></h5>
+										<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											<span aria-hidden="true">&times;</span>
+										</button>
+									</div>
+									<div class="modal-body text-justify">
+										<p>Declaro que he sido informado: (i) Que SOFERCO S.A.S, como responsable de los datos personales obtenidos a través de sus distintos canales de atención, han puesto a mi disposición la línea de atención 236 3000, el correo electrónico calidad.buga@ferremaster.com.co y las oficinas de Buga, Palmira y Tuluá, cuya información puedo consultar en www.ferremaster.com.co, disponibles de lunes a viernes de 8:00 a.m. a 12:00 a.m. y de 1:45 a 5:45 p.m.,  sábados  de 8:00 a.m. a 12:30 a.m.  Para la atención de requerimientos relacionados con el tratamiento de mis datos personales y el ejercicio de los derechos mencionados en esta autorización.</p>
+										<p>
+										(ii) Esta autorización permitirá a SOFERCO S.A.S, recolectar, transferir, almacenar, usar, circular, suprimir, compartir, actualizar y transmitir, de acuerdo con el procedimiento para el tratamiento de los datos personales en procura de cumplir con las siguientes finalidades:</p>
+										<p>
+										(1) Validar la información en cumplimiento de la exigencia legal de conocimiento del cliente aplicable a SOFERCO S.A.S, (2) adelantar las acciones de cobro y de recuperación de cartera, (3) para el tratamiento de los datos personales protegidos por nuestro ordenamiento jurídico, (4) para el tratamiento y protección de los datos de contacto (direcciones de correo físico, electrónico, redes sociales y teléfono).</p>
+										<p>
+											El alcance de la autorización comprende la facultad para que SOFERCO S.A.S. le envíe mensajes con contenidos institucionales, comerciales, notificaciones, información del estado de cuenta, saldos, cuotas pendientes de pago y demás información relativa al portafolio de servicios de SOFERCO S.A.S., a través de correo electrónico y/o mensajes de texto al teléfono móvil.
+										</p>
+										<p>
+											(iii) Mis derechos como titular del dato son los previstos en la Constitución y la Ley 1581 de 2012 y el Decreto 1377 de 2013, especialmente el derecho a conocer, actualizar, rectificar y suprimir mi información personal; así como el derecho a revocar el consentimiento otorgado para el tratamiento de datos personales. Estos los puedo ejercer a través de los canales dispuestos por SOFERCO S.A.S. para la atención al público y observando la política de tratamiento de datos personales de SOFERCO S.A.S.  Disponible en La web: www.ferremaster.com.co
+										</p>
+										<p>
+											Otorgo mi consentimiento a SOFERCO S.A.S. para tratar mi información personal, de acuerdo con la política de tratamiento de datos personales, y por tanto me comprometo a leer el aviso de privacidad y la política mencionada disponible en la web: www.ferremaster.com.co. Autorizo a SOFERCO S.A.S a modificar o actualizar su contenido, a fin de atender reformas legislativas, políticas internas o nuevos requerimientos para la prestación u ofrecimiento de servicios o productos, dando aviso previo por medio de la página web de la compañía, y/o correo electrónico.
+										</p>
+										<p> 
+											La información del formato del cual forma parte la presente autorización la he suministrado de forma voluntaria y es verídica. 
+										</p>
+									</div>
+									<div class="modal-footer">
+										<button type="button" class="btn btn-secondary" data-dismiss="modal">No acepto</button>
+										<button class="btn btn-warning">Acepto</button>
 									</div>
 								</div>
 							</div>
 						</div>
-						<div class="row mb-3">
-							<div class="col-xs-1 pt-1 d-none d-md-block">
-								<span class="fas fa-tools"></span>
-							</div>
-							<div class="col-md-11">
-								<input required class="form-control" id="especialidad" name="especialidad" placeholder="Especialidad"></input>
-							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="col-xs-1 pt-1 d-none d-md-block">
-								<span class="fas fa-file-image"></span>
-							</div>
-							<div class="col-md-11">
-								<label class="form-label col-md-4">Imagen de perfil</label>
-								<input class="form-control-sm"  type="file" name="archivo">
-							</div>
-						</div>
-						<div class="row mb-3">
-							<div class="col-xs-1 pt-1 d-none d-md-block">
-								<span class="fas fa-file-archive"></span>
-							</div>
-							<div class="col-md-11">
-								<label class="form-label col-md-4">Trabajos realizados</label>
-								<input class="form-control-sm" type="file" multiple name="file[]">
-							</div>
-						</div>
-						<div class="row justify-content-end">
-							<div class="col-md-4 mr-4"><button class="btn btn-warning btn-block">Enviar</button></div>
-						</div>
-					</form>
-				</div>
+					</div>
+				</form>
 			</div>
 		</div>
 	</div>
+</div>
 </div>
 
 <div class="py-5 text-center full" id="last-works">
